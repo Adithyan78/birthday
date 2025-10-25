@@ -113,25 +113,41 @@
             padding: 0 20px;
         }
 
-        .balloons {
+        .balloons-container {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
             margin: 30px 0;
         }
 
-        .balloon {
-            width: 60px;
-            height: 70px;
-            background: #ff66b2;
-            border-radius: 50%;
+        .image-balloon {
             position: relative;
-            margin: 0 10px;
+            width: 150px;
+            height: 180px;
             animation: float 3s ease-in-out infinite;
         }
 
-        .balloon:before {
-            content: "";
-            width: 2px;
+        .balloon-shape {
+            width: 150px;
+            height: 150px;
+            background: #ff66b2;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .balloon-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .balloon-string {
+            width: 3px;
             height: 50px;
             background: #ffb3d9;
             position: absolute;
@@ -140,20 +156,10 @@
             transform: translateX(-50%);
         }
 
-        .balloon:nth-child(2) {
-            background: #ff99cc;
-            animation-delay: 0.5s;
-        }
-
-        .balloon:nth-child(3) {
-            background: #ff4d94;
-            animation-delay: 1s;
-        }
-
-        .balloon:nth-child(4) {
-            background: #ff80aa;
-            animation-delay: 1.5s;
-        }
+        .balloon-shape:nth-child(1) .balloon-shape { background: #ff66b2; animation-delay: 0s; }
+        .balloon-shape:nth-child(2) .balloon-shape { background: #ff99cc; animation-delay: 0.5s; }
+        .balloon-shape:nth-child(3) .balloon-shape { background: #ff4d94; animation-delay: 1s; }
+        .balloon-shape:nth-child(4) .balloon-shape { background: #ff80aa; animation-delay: 1.5s; }
 
         @keyframes float {
             0%, 100% {
@@ -164,54 +170,64 @@
             }
         }
 
+        /* FIXED CAKE - RIGHT SIDE UP */
         .cake {
             margin: 30px 0;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .plate {
-            width: 200px;
-            height: 20px;
+            width: 220px;
+            height: 15px;
             background: #ffccdd;
             border-radius: 50%;
             margin: 0 auto;
+            order: 3; /* Plate at bottom */
         }
 
-        .layer {
-            width: 180px;
+        .layer-bottom {
+            width: 200px;
             height: 40px;
             background: #ff99cc;
-            border-radius: 10px;
+            border-radius: 10px 10px 0 0;
             margin: 0 auto;
             position: relative;
+            order: 2; /* Bottom layer in middle */
         }
 
         .layer-top {
-            width: 200px;
-            height: 20px;
+            width: 180px;
+            height: 30px;
             background: #ff66b2;
-            border-radius: 10px;
+            border-radius: 10px 10px 0 0;
             margin: 0 auto;
+            order: 1; /* Top layer on top */
         }
 
         .candle {
-            width: 10px;
-            height: 30px;
+            width: 8px;
+            height: 25px;
             background: #ffcc00;
             margin: 0 auto;
             position: relative;
-            top: -10px;
+            top: -5px;
+            order: 0; /* Candle on very top */
+            z-index: 2;
         }
 
         .flame {
-            width: 15px;
-            height: 20px;
+            width: 12px;
+            height: 18px;
             background: #ff9900;
             border-radius: 50% 50% 20% 20%;
             margin: 0 auto;
             position: relative;
-            top: -20px;
+            top: -18px;
             animation: flicker 0.5s infinite alternate;
+            z-index: 3;
         }
 
         @keyframes flicker {
@@ -252,39 +268,6 @@
             background: #ff66b2;
             opacity: 0;
             z-index: 5;
-        }
-
-        .bouncing-image {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 20px;
-            object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            z-index: 1;
-            opacity: 0;
-            transform: scale(0.5);
-            transition: all 0.5s ease;
-        }
-
-        .image-pop {
-            animation: popIn 0.8s ease-out forwards;
-        }
-
-        @keyframes popIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) rotate(-15deg);
-            }
-            70% {
-                opacity: 1;
-                transform: scale(1.1) rotate(5deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
         }
 
         .firework {
@@ -344,6 +327,25 @@
             }
         }
 
+        @keyframes balloonPopIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(100px);
+            }
+            70% {
+                opacity: 1;
+                transform: scale(1.1) translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .balloon-pop-in {
+            animation: balloonPopIn 0.8s ease-out forwards;
+        }
+
         @media (max-width: 600px) {
             .birthday-title {
                 font-size: 2.2rem;
@@ -357,14 +359,73 @@
                 font-size: 1rem;
             }
             
-            .bouncing-image {
-                width: 140px;
-                height: 140px;
+            .image-balloon {
+                width: 120px;
+                height: 150px;
+            }
+            
+            .balloon-shape {
+                width: 120px;
+                height: 120px;
             }
             
             .wish-button {
                 font-size: 1.3rem;
                 padding: 12px 30px;
+            }
+
+            .balloons-container {
+                gap: 20px;
+            }
+
+            /* Mobile cake adjustments */
+            .plate {
+                width: 180px;
+            }
+            
+            .layer-bottom {
+                width: 160px;
+                height: 35px;
+            }
+            
+            .layer-top {
+                width: 140px;
+                height: 25px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .image-balloon {
+                width: 100px;
+                height: 130px;
+            }
+            
+            .balloon-shape {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .birthday-title {
+                font-size: 1.8rem;
+            }
+            
+            .birthday-person {
+                font-size: 1.5rem;
+            }
+
+            /* Small mobile cake adjustments */
+            .plate {
+                width: 160px;
+            }
+            
+            .layer-bottom {
+                width: 140px;
+                height: 30px;
+            }
+            
+            .layer-top {
+                width: 120px;
+                height: 20px;
             }
         }
     </style>
@@ -391,15 +452,13 @@
     
     <!-- Birthday Section (Hidden Initially) -->
     <div class="container birthday-content" id="birthdayContainer">
+        <h1 class="birthday-title">പറ്റിച്ചേ</h1>
         <h1 class="birthday-title"> Happy Birthday!</h1>
         
-        <div class="birthday-person" id="birthdayName">Dear Sarah</div>
+        <div class="birthday-person" id="birthdayName">Dear Pinkzzz</div>
         
-        <div class="balloons">
-            <div class="balloon"></div>
-            <div class="balloon"></div>
-            <div class="balloon"></div>
-            <div class="balloon"></div>
+        <div class="balloons-container" id="balloonsContainer">
+            <!-- Balloons with images will be added here dynamically -->
         </div>
         
         <div class="message">
@@ -407,12 +466,13 @@
             <p>Click the button below for an amazing surprise!</p>
         </div>
         
+        <!-- FIXED CAKE - RIGHT SIDE UP -->
         <div class="cake">
-            <div class="plate"></div>
-            <div class="layer"></div>
-            <div class="layer-top"></div>
             <div class="candle"></div>
             <div class="flame"></div>
+            <div class="layer-top"></div>
+            <div class="layer-bottom"></div>
+            <div class="plate"></div>
         </div>
         
         <button class="wish-button" onclick="activateSurprise()">🎂 Click! 🎂</button>
@@ -435,14 +495,13 @@
         const imagePaths = [
             "images/IMG-20251025-WA0018.jpg",
             "images/IMG-20251025-WA0019.jpg", 
-        
             "images/IMG-20251025-WA0021.jpg",
             "images/WhatsApp Image 2025-10-25 at 09.53.04_bc650ce3.jpg"
         ];
         
         // Birthday messages for bubbles
         const birthdayMessages = [
-            
+           
         ];
         
         // =============================================
@@ -478,8 +537,8 @@
             // Play birthday music
             playBirthdaySound();
             
-            // Create large bouncing images
-            createBouncingImages();
+            // Create image balloons
+            createImageBalloons();
             
             // Create massive confetti
             createConfetti();
@@ -501,37 +560,41 @@
             animateCakeCandles();
         }
         
-        // Create large bouncing images using the specified paths
-        function createBouncingImages() {
-            const positions = [
-                {left: '5%', top: '15%'},
-                {left: '15%', top: '65%'},
-                {left: '75%', top: '25%'},
-                {left: '85%', top: '55%'},
-                {left: '50%', top: '80%'}
-            ];
+        // Create image balloons
+        function createImageBalloons() {
+            const balloonsContainer = document.getElementById('balloonsContainer');
+            balloonsContainer.innerHTML = '';
             
-            for (let i = 0; i < imagePaths.length; i++) {
-                const img = document.createElement('img');
-                img.className = 'bouncing-image';
-                img.src = imagePaths[i];
-                img.alt = 'Birthday celebration';
+            // Limit number of balloons on mobile for better performance
+            const maxBalloons = window.innerWidth <= 600 ? Math.min(3, imagePaths.length) : imagePaths.length;
+            
+            for (let i = 0; i < maxBalloons; i++) {
+                const balloonDiv = document.createElement('div');
+                balloonDiv.className = 'image-balloon';
+                balloonDiv.style.opacity = '0';
+                balloonDiv.style.animationDelay = `${i * 0.3}s`;
                 
-                // Use predefined positions
-                if (i < positions.length) {
-                    img.style.left = positions[i].left;
-                    img.style.top = positions[i].top;
-                } else {
-                    img.style.left = `${5 + Math.random() * 90}%`;
-                    img.style.top = `${10 + Math.random() * 80}%`;
-                }
+                const balloonShape = document.createElement('div');
+                balloonShape.className = 'balloon-shape';
+                
+                const balloonImage = document.createElement('img');
+                balloonImage.className = 'balloon-image';
+                balloonImage.src = imagePaths[i];
+                balloonImage.alt = 'Birthday celebration';
+                
+                const balloonString = document.createElement('div');
+                balloonString.className = 'balloon-string';
+                
+                balloonShape.appendChild(balloonImage);
+                balloonDiv.appendChild(balloonShape);
+                balloonDiv.appendChild(balloonString);
+                balloonsContainer.appendChild(balloonDiv);
                 
                 // Add pop-in animation with delay
                 setTimeout(() => {
-                    img.classList.add('image-pop');
+                    balloonDiv.style.opacity = '1';
+                    balloonDiv.classList.add('balloon-pop-in');
                 }, i * 300);
-                
-                document.body.appendChild(img);
             }
         }
         
@@ -539,7 +602,10 @@
         function createConfetti() {
             const colors = ['#ff66b2', '#ff99cc', '#ff4d94', '#ff80aa', '#e91e63', '#ff9800', '#4caf50', '#2196f3'];
             
-            for (let i = 0; i < 200; i++) {
+            // Reduce confetti count on mobile for better performance
+            const confettiCount = window.innerWidth <= 600 ? 100 : 200;
+            
+            for (let i = 0; i < confettiCount; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + 'vw';
@@ -568,7 +634,10 @@
         
         // Create fireworks effect
         function createFireworks() {
-            for (let i = 0; i < 15; i++) {
+            // Reduce fireworks on mobile
+            const fireworkCount = window.innerWidth <= 600 ? 8 : 15;
+            
+            for (let i = 0; i < fireworkCount; i++) {
                 setTimeout(() => {
                     const firework = document.createElement('div');
                     firework.className = 'firework';
@@ -596,7 +665,10 @@
         
         // Create floating message bubbles
         function createMessageBubbles() {
-            for (let i = 0; i < 12; i++) {
+            // Reduce bubbles on mobile
+            const bubbleCount = window.innerWidth <= 600 ? 6 : 12;
+            
+            for (let i = 0; i < bubbleCount; i++) {
                 setTimeout(() => {
                     const bubble = document.createElement('div');
                     bubble.className = 'message-bubble';
